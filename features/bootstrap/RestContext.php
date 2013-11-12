@@ -86,7 +86,7 @@ class RestContext extends BehatContext implements ClosuredContextInterface
 		}
 
 		$this->parameters = $parameters;
-		$this->client	  = new Guzzle\Service\Client;
+		$this->client	  = new \Guzzle\Http\Client;
 	}
 
 	/**
