@@ -182,6 +182,7 @@ class RestContext extends BehatContext implements ClosuredContextInterface
 				$body = null;
 				break;
 			case self::METHOD_POST:
+				$body = $this->getMainContext()->getData();
 			case self::METHOD_PUT:
 				$body = http_build_query($this->getMainContext()->getData());
 				break;
