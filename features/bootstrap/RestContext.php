@@ -305,6 +305,30 @@ class RestContext extends BehatContext implements ClosuredContextInterface
 	}
 
 	/**
+	 * @Then /^field "([^"]*)" in the response should be an array$/
+	 */
+	public function fieldInTheResponseShouldBeAnArray($fieldName)
+	{
+		if ($this->responseIsJson)
+		{
+			if (!($this->responseData instanceof stdClass) || !isset($this->responseData->$fieldName))
+			{
+				return new Step\Then(sprintf('the response should contain field "%s"', $fieldName));
+			}
+			if (!is_array($this->responseData->$fieldName))
+			{
+				throw new \Exception(
+						sprintf('Field %s is not an array', $fieldName)
+				);
+			}
+		}
+		else
+		{
+			return new Step\Then('the response is JSON');
+		}
+	}	
+	
+	/**
 	 * @Then /^field "([^"]+)" in the response should be an? (int|integer) "([^"]*)"$/
 	 *
 	 * @todo Need to be better designed.
