@@ -34,6 +34,12 @@ function getVarName($fieldName)
 $steps->Given(
 	'/^that (.*) of the employee is "([^"]*)"$/',
 	function(FeatureContext $world, $fieldName, $fieldValue) {
+		/**
+		 * Check for variables inside the fieldValue
+		 */
+		if($world->hasVariable($fieldValue)){
+			$fieldValue = $world->getSubcontextByClassName('RestContext')->storedFields[$world->extractVariable($fieldValue)];
+		}
 		$world->setData(getVarName($fieldName), $fieldValue);
 	}
 );
@@ -61,6 +67,12 @@ $steps->Given(
 $steps->Then(
 	'/^I\'m changing (.*) of the employee to "([^"]*)"$/',
 	function(FeatureContext $world, $fieldName, $fieldValue) {
+		/**
+		 * Check for variables inside the fieldValue
+		 */
+		if($world->hasVariable($fieldValue)){
+			$fieldValue = $world->getSubcontextByClassName('RestContext')->storedFields[$world->extractVariable($fieldValue)];
+		}
 		$world->setData(getVarName($fieldName), $fieldValue);
 	}
 );
