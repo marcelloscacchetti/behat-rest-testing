@@ -506,4 +506,36 @@ class RestContext extends BehatContext implements ClosuredContextInterface
 
 		throw new \Exception('JSON decoding error: ' . $message);
 	}
+	
+	/**
+	 * @Given /^I store the field "([^"]*)"$/
+	 */
+	public function iStoreTheField($fieldName)
+	{
+		if ($this->responseIsJson)
+		{
+			if (!($this->responseData instanceof stdClass) || !isset($this->responseData->$fieldName))
+			{
+				throw new \Exception('Field "' . $fieldName . '" is not set!');
+			} else {
+				$this->storedFields[$fieldName] = $this->responseData->$fieldName;
+			}
+		}
+	}
+	
+	/**
+	 * @Given /^I store the field "([^"]*)" as "([^"]*)"$/
+	 */
+	public function iStoreTheFieldAs($fieldName, $storageName)
+	{
+		if ($this->responseIsJson)
+		{
+			if (!($this->responseData instanceof stdClass) || !isset($this->responseData->$fieldName))
+			{
+				throw new \Exception('Field "' . $fieldName . '" is not set!');
+			} else {
+				$this->storedFields[$storageName] = $this->responseData->$fieldName;
+			}
+		}
+	}	
 }
