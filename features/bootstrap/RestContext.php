@@ -356,6 +356,49 @@ class RestContext extends BehatContext implements ClosuredContextInterface
 		{
 			return new Step\Then('the response is JSON');
 		}
+	}
+
+	/**
+	 * @Given /^field "([^"]*)" in the response contains an element whose "([^"]*)" field value is "([^"]*)"$/
+	 */
+	public function fieldInTheResponseContainsAnElementWhoseNameFieldIsLeads($fieldName, $elementFieldName, $elementFieldValue)
+	{
+		if ($this->responseIsJson)
+		{
+			if (!($this->responseData instanceof stdClass) || !isset($this->responseData->$fieldName))
+			{
+				return new Step\Then(sprintf('the response should contain field "%s"', $fieldName));
+			}
+			if (!is_array($this->responseData->$fieldName))
+			{
+				throw new \Exception(
+						sprintf('Field %s is not an array', $fieldName)
+				);
+			}
+			// Search the field name and value
+			$found = 0;
+			foreach($this->responseData->$fieldName as $element) {
+				/**
+				 * Check for variables inside fieldValue
+				 */
+				if($this->getMainContext()->hasVariable($elementFieldValue)){
+					$variable = $this->getMainContext()->extractVariable($elementFieldValue);
+					$elementFieldValue = $this->storedFields[$variable];
+				}
+				if(isset($element->$elementFieldName) && $element->$elementFieldName == $elementFieldValue){
+					$found = 1;
+				}
+			}
+			if($found == 0){
+				throw new \Exception(
+						sprintf('Field %s doesn\'t containt an element with field name %s and value %s', $fieldName, $elementFieldName,$elementFieldValue)
+				);
+			}
+		}
+		else
+		{
+			return new Step\Then('the response is JSON');
+		}
 	}	
 	
 	/**
