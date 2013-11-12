@@ -326,6 +326,36 @@ class RestContext extends BehatContext implements ClosuredContextInterface
 		{
 			return new Step\Then('the response is JSON');
 		}
+	}
+
+	/**
+	 * @Then /^field "([^"]*)" in the response contains (\d+) elements$/
+	 */
+	public function fieldInTheResponseContainsElements($fieldName, $numElements)
+	{
+		if ($this->responseIsJson)
+		{
+			if (!($this->responseData instanceof stdClass) || !isset($this->responseData->$fieldName))
+			{
+				return new Step\Then(sprintf('the response should contain field "%s"', $fieldName));
+			}
+			if (!is_array($this->responseData->$fieldName))
+			{
+				throw new \Exception(
+						sprintf('Field %s is not an array', $fieldName)
+				);
+			}
+			if (count($this->responseData->$fieldName) != $numElements)
+			{
+				throw new \Exception(
+						sprintf('Number of elements for field %s are %s not %s', $fieldName, count($this->responseData->$fieldName), $numElements)
+				);
+			}
+		}
+		else
+		{
+			return new Step\Then('the response is JSON');
+		}
 	}	
 	
 	/**
