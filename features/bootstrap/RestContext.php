@@ -71,6 +71,12 @@ class RestContext extends BehatContext implements ClosuredContextInterface
 	 * @var \Exception
 	 */
 	protected $responseDecodeException;
+	
+	/**
+	 * Stored Fields
+	 * @var array
+	 */
+	public $storedFields = array();	
 
 	/**
 	 * Initializes context.
