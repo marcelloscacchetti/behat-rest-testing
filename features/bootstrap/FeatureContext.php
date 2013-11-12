@@ -78,4 +78,44 @@ class FeatureContext extends BehatContext
 	{
 		return array_key_exists($name, $this->data);
 	}
+	
+	/**
+	 * Check if a string contains a variable in the form {{.*}}
+	 * @param string $varString string to match
+	 * @return bool match result
+	 */
+	public function hasVariable($varString)
+	{
+		if (preg_match("/\\{\\{.*\\}\\}/", $varString)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Extract variable name from a string in the form of text inside {{.*}}
+	 * @param string $varString source string
+	 * @return string variable name
+	 * @todo support multiple variables
+	 */
+	public function extractVariable($varString)
+	{
+		preg_match("/\\{\\{.*\\}\\}/", $varString, $matches);
+		$variable = str_replace('{{', '', $matches[0]);
+		$variable = str_replace('}}', '', $variable);
+		return $variable;
+	}
+	
+	/**
+	 * Extract variable definition  from a string in the form of {{.*}}
+	 * @param string $varString source string
+	 * @return string variable definition
+	 * @todo support multiple variables
+	 */
+	public function extractVariableDefinition($varString)
+	{
+		preg_match("/\\{\\{.*\\}\\}/", $varString, $matches);
+		return $matches[0];
+	}	
 }
