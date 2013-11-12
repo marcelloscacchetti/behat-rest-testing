@@ -183,8 +183,9 @@ class RestContext extends BehatContext implements ClosuredContextInterface
 				break;
 			case self::METHOD_POST:
 				$body = $this->getMainContext()->getData();
+				break;
 			case self::METHOD_PUT:
-				$body = http_build_query($this->getMainContext()->getData());
+				$body = $this->getMainContext()->getData();
 				break;
 			default:
 				throw new \Exception('Unsupported RESTful request method: ' . $this->requestMethod);
