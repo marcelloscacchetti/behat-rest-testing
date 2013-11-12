@@ -279,6 +279,14 @@ class RestContext extends BehatContext implements ClosuredContextInterface
 				return new Step\Then(sprintf('the response should contain field "%s"', $fieldName));
 			}
 
+			/**
+			 * Check for variables inside the field value
+			 */
+			if($this->getMainContext()->hasVariable($fieldValue)){
+				$variable = $this->getMainContext()->extractVariable($fieldValue);
+				$fieldValue = $this->storedFields[$variable];
+			}			
+			
 			if ($this->responseData->$fieldName != $fieldValue)
 			{
 				throw new \Exception(
