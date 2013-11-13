@@ -97,25 +97,48 @@ class FeatureContext extends BehatContext
 	 * Extract variable name from a string in the form of text inside {{.*}}
 	 * @param string $varString source string
 	 * @return string variable name
-	 * @todo support multiple variables
 	 */
 	public function extractVariable($varString)
 	{
-		preg_match("/\\{\\{.*\\}\\}/", $varString, $matches);
-		$variable = str_replace('{{', '', $matches[0]);
-		$variable = str_replace('}}', '', $variable);
-		return $variable;
+	    preg_match_all("/\\{\\{[a-z_]+\\}\\}/", $varString, $matches);
+	    /**
+         * Check for multiple matches
+	     */
+	    if(count($matches[0]) > 1) {
+	        $variable = array();
+	    	foreach($matches[0] as $match) {
+	           $var = str_replace('{{', '', $match);
+	           $var = str_replace('}}', '', $var);
+	           array_push($variable, $var);
+	    	}
+	    } else {
+	        $variable = str_replace('{{', '', $matches[0][0]);
+	        $variable = str_replace('}}', '', $variable);
+	    }
+	    return $variable;
 	}
 	
 	/**
 	 * Extract variable definition  from a string in the form of {{.*}}
 	 * @param string $varString source string
 	 * @return string variable definition
-	 * @todo support multiple variables
 	 */
 	public function extractVariableDefinition($varString)
 	{
-		preg_match("/\\{\\{.*\\}\\}/", $varString, $matches);
-		return $matches[0];
+	    preg_match_all("/\\{\\{[a-z_]+\\}\\}/", $varString, $matches);
+	    
+	    /**
+	     * Check for multiple matches
+	     */
+	    if(count($matches[0]) > 1) {
+	        $result = array();
+	        foreach($matches[0] as $match) {
+	        	array_push($result, $match);
+	        }
+	    } else {
+	       $result = $matches[0][0];
+	    }    
+		
+		return $result;
 	}	
 }

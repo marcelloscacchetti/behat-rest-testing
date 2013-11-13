@@ -164,12 +164,23 @@ class RestContext extends BehatContext implements ClosuredContextInterface
 		$this->responseIsJson = false;
 		
 		/**
-		 * Check for variables inside the url
+         * Check for variables inside the url
 		 */
 		if($this->getMainContext()->hasVariable($pageUrl)){
 			$variable = $this->getMainContext()->extractVariable($pageUrl);
 			$variableDefinition = $this->getMainContext()->extractVariableDefinition($pageUrl);
-			$pageUrl = str_replace($variableDefinition,$this->storedFields[$variable], $pageUrl);
+			/**
+             * Check if multiple variables are defined
+             * assume that is $variable is array also $variableDefinition is array
+             * and are in sync
+			 */
+			if(is_array($variable)) {
+			    for($i = 0; $i < count($variable); $i++) {
+			        $pageUrl = str_replace($variableDefinition[$i],$this->storedFields[$variable[$i]], $pageUrl);
+			    }
+			} else {
+			    $pageUrl = str_replace($variableDefinition,$this->storedFields[$variable], $pageUrl);
+			}
 		}
 
 		$url = Url::factory($this->getParameter('base_url'))->combine($pageUrl);
